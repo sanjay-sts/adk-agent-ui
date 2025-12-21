@@ -38,10 +38,17 @@ export function useChat() {
 
       // Stream the response
       await sendMessageStreaming(content, (chunk) => {
-        // Accumulate text (SSE sends complete messages, not incremental chunks)
-        accumulatedText = chunk;
+        // Log each chunk for debugging
+        console.log('[SSE Chunk]:', chunk);
+        
+        // Accumulate text from each chunk with line breaks between chunks
+        if (accumulatedText && chunk.trim()) {
+          accumulatedText += '\n\n' + chunk;
+        } else {
+          accumulatedText += chunk;
+        }
 
-        // Update the assistant message with the new content
+        // Update the assistant message with the accumulated content
         setMessages((prev) =>
           prev.map((msg) =>
             msg.id === assistantMessageId
@@ -50,6 +57,8 @@ export function useChat() {
           )
         );
       });
+
+      console.log('[SSE Complete] Final text:', accumulatedText);
 
       // If no text was received, show a fallback
       if (!accumulatedText) {

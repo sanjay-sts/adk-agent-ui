@@ -1,6 +1,7 @@
 import type { HealthResponse, InfoResponse } from '../types';
 
-const AGENT_BASE_URL = 'http://127.0.0.1:8001';
+// Use Vite proxy to avoid CORS issues - requests to /api/* are proxied to the ALB
+const AGENT_BASE_URL = '/api';
 const APP_NAME = 'datetime_agent';
 const USER_ID = 'user';
 
